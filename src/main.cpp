@@ -37,3 +37,46 @@ TEST_CASE( "Pop test", "[inner]" ){
 	}
 	CHECK( s.size() == 500 );
 }
+
+TEST_CASE ("Copy constructor test","[creation]"){
+    AUDS<int> a;
+
+    for(int i=0; i<150; i++){
+        a.push(i);
+    }
+
+    AUDS<int> b = a;
+
+    a.push(150);
+
+    CHECK( a.size() == 151 );
+    CHECK( b.size() == 150 );
+}
+
+TEST_CASE ("Copy operator test","[creation]"){
+    AUDS<int> a, b;
+
+    a.push(1);
+    a.push(2);
+    b.push(3);
+
+    CHECK ( a.size() == 2 );
+    CHECK ( b.size() == 1 );
+
+    b = a;
+    
+    //check that they're copies
+    CHECK ( a.size() == b.size() );
+
+    a.pop();
+    a.pop();
+
+    //check that they don't refer to the same object
+    CHECK ( a.size() == 0 );
+    CHECK ( b.size() == 2 );
+}
+
+TEST_CASE ("Empty pop test", "[error]") {
+    AUDS<int> a;
+    REQUIRE_THROWS_WITH(a.pop(), "Cannot pop empty AUDS");
+}
